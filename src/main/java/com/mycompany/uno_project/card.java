@@ -3,6 +3,9 @@
  */
 package com.mycompany.uno_project;
 
+/**
+ * The "card" class defines a card object with a color and value attribute.
+ */
 
 public class card {
     private String color;
