@@ -1,3 +1,6 @@
+/**
+ * The "card" class defines a card object with a color and value attribute.
+ */
 package com.mycompany.uno_project;
 
 

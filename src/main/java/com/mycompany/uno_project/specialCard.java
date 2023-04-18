@@ -1,15 +1,22 @@
 package com.mycompany.uno_project;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class specialCard extends card {
-    private static final String[] COLORS = {"RED", "GREEN", "BLUE", "YELLOW"};
-    private static final String[] SPECIAL = {"SKIP", "REVERSE", "DRAW TWO", "WILD", "WILD DRAW FOUR"};
+   
+    
+    private static final fileReader fileReader = new fileReader();
+    private static final String[] COLORS = fileReader.getColors();
+    private static final String[] SPECIAL = fileReader.getSpecial();
+    // private static final String[] COLORS = {"RED", "BLUE", "GREEN", "YELLOW"};
+    // private static final String[] SPECIAL = {"WILD", "WILD DRAW FOUR", "SKIP", "REVERSE", "DRAW TWO"};
+
 
     // Constructor for the specialCard class.
     public specialCard(String special, String color) {
         super(color, special);
-        if (getValue().equals("WILD") || getValue().equals("WILD DRAW FOUR")) {
+        if (getValue().equalsIgnoreCase("WILD") || getValue().equalsIgnoreCase("WILD DRAW FOUR")) {
             setColor("BLACK");
         }
     }

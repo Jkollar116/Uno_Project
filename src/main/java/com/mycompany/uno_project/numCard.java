@@ -1,10 +1,10 @@
 package com.mycompany.uno_project;
 
-import java.util.Random;
-
+import java.util.*;
 public class numCard extends card {
-    static final String[] COLORS = {"RED", "GREEN", "BLUE", "YELLOW"};
-    private static final String[] NUMBERS = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+    static fileReader file = new fileReader();
+    static final String[] COLORS = file.getColors();
+    private static final String[] NUMBERS = file.getNumbers();
 
     // Constructor for the numCard class.
     public numCard(String number, String color) {

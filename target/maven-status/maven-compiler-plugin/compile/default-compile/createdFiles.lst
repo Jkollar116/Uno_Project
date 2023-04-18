@@ -1,7 +1,10 @@
 com\mycompany\uno_project\App.class
 com\mycompany\uno_project\endScreen.class
+com\mycompany\uno_project\homeController.class
 com\mycompany\uno_project\specialCard.class
+com\mycompany\uno_project\fileReader.class
 com\mycompany\uno_project\numCard.class
 module-info.class
 com\mycompany\uno_project\game.class
+com\mycompany\uno_project\aiController.class
 com\mycompany\uno_project\card.class

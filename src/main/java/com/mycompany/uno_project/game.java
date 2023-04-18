@@ -2,6 +2,7 @@ package com.mycompany.uno_project;
 import java.util.*;
 
 public class game{
+    static fileReader file = new fileReader();
     // Determines the order of the game based on an integer value.
     public static int order(int order) {
         if (order % 2 == 0) {
@@ -43,18 +44,24 @@ public class game{
     }
 
     // Generates a hand of cards.
-    public static List<card> generateHand() {
-        List<card> hand = new ArrayList<>();
+    public static ArrayList<card> generateHand() {
+        ArrayList<card> hand = new ArrayList<>();
         Random rand = new Random();
-        int randomNum = rand.nextInt(3) + 1;
-        for (int a = 0; a < 7 - randomNum; a++) {
-            hand.add(numCard.generateRandomNumCard());
+        int start = file.getNumberOfStartCards();
+        double specialCardProbability = 0.3;
+    
+        for (int i = 0; i < start; i++) {
+            double randomValue = rand.nextDouble();
+            if (randomValue < specialCardProbability) {
+                hand.add(specialCard.generateRandomSpecialCard());
+            } else {
+                hand.add(numCard.generateRandomNumCard());
+            }
         }
-        for (int i = 0; i < randomNum; i++) {
-            hand.add(specialCard.generateRandomSpecialCard());
-        }
+    
         return hand;
     }
+    
 
     // Determines if a card is playable based on the top card in the pile.
     public static boolean isPlayable(card card, card topCard) {
@@ -64,8 +71,53 @@ public class game{
             return true;
         } else if (topCard.getValue().toLowerCase().equals("wild") || topCard.getValue().toLowerCase().equals("wild draw four")) {
             return true;
+        } else if (card.getValue().toLowerCase().equals("draw two") && topCard.getValue().toLowerCase().equals("d")) {
+            return true;
+        } else if (card.getValue().toLowerCase().equals("skip") && topCard.getValue().toLowerCase().equals("s")) {
+            return true;
+        } else if (card.getValue().toLowerCase().equals("reverse") && topCard.getValue().toLowerCase().equals("r")) {
+            return true;
         } else {
             return false;
         }
     }
+
+    /**
+     * This function returns the number of AI players from a file.
+     * 
+     * @return The method `getPlayers()` is returning an integer value which is obtained by calling the
+     * `getNumberOfAiPlayers()` method of the `fileReader` class.
+     */
+    public static int getPlayers() {
+        fileReader file = new fileReader();
+        return file.getNumberOfAiPlayers();
+    }
+
+
+    /**
+     * The function "drawTwo" generates and returns an ArrayList of two randomly generated cards.
+     * 
+     * @return An ArrayList of two randomly generated cards.
+     */
+    public static ArrayList<card> drawTwo() {
+        ArrayList<card> drawTwo = new ArrayList<>();
+        drawTwo.add(generateRandomCard());
+        drawTwo.add(generateRandomCard());
+        return drawTwo;
+
+    }
+
+    /**
+     * The function "drawFour" returns an ArrayList of two randomly generated cards.
+     * 
+     * @return An ArrayList of four randomly generated cards.
+     */
+    public static ArrayList<card> drawFour() {
+        ArrayList<card> drawTwo = new ArrayList<>();
+        drawTwo.add(generateRandomCard());
+        drawTwo.add(generateRandomCard());
+        return drawTwo;
+
+    }
 }
+

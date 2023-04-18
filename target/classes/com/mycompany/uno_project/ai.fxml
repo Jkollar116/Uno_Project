@@ -7,7 +7,11 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="1214.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.uno_project.aiController">
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="693.0" prefWidth="1214.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.uno_project.aiController"
+    style="-fx-background-image: url('/com/mycompany/uno_project/background.jpg');
+                 -fx-background-size: cover;
+                 -fx-background-repeat: no-repeat;">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -50,6 +54,5 @@
       <Button fx:id="wildColor4btn" mnemonicParsing="false" prefHeight="69.0" prefWidth="164.0" GridPane.columnIndex="8" GridPane.valignment="BOTTOM" />
       <Button fx:id="leftArrowbtn" mnemonicParsing="false" onAction="#leftArrowbtn_Click" prefHeight="224.0" prefWidth="109.0" text="&lt;--" GridPane.rowIndex="1" />
       <Button fx:id="rightArrowbtn" mnemonicParsing="false" onAction="#rightArrowbtn_Click" prefHeight="226.0" prefWidth="101.0" text="--&gt;" GridPane.columnIndex="12" GridPane.rowIndex="1" />
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" stylesheets="@style.css" />
    </children>
 </GridPane>
