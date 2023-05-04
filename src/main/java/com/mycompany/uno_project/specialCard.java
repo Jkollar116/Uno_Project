@@ -26,4 +26,10 @@ public class specialCard extends card {
         Random rand = new Random();
         return new specialCard(SPECIAL[rand.nextInt(SPECIAL.length)], COLORS[rand.nextInt(COLORS.length)]);
     }
+    
+    
+    @Override
+    public String toString() {
+        return getColor() + " " + getValue();
+    }
 }

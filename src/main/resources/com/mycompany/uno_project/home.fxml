@@ -9,7 +9,6 @@
     <children>
         <Label text="Welcome To Uno!" />
         <Button fx:id="secondaryButton" onAction="#switchToAi" prefHeight="19.0" prefWidth="300.0" text="New Game" />
-      <Button fx:id="PVP2btn" mnemonicParsing="false" onAction="#PVP2btn_Click" prefHeight="15.0" prefWidth="311.0" text="Load Game" />
     </children>
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

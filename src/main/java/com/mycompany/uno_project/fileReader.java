@@ -7,10 +7,14 @@ public class fileReader {
     private String[] colors;
     private String[] special;
     private String[] numbers;
-    private int numberOfStartCards;
+    private static int numberOfStartCards;
     private int numberOfAiPlayers;
     private boolean allSpecialCards;
 
+
+   // This is a constructor for the `fileReader` class. It sets the file path to the `startFile.txt`
+   // file and then calls the `readFile` method to read and extract relevant information from the file
+   // to initialize variables.
     public fileReader() {
         String filePath = "C:\\Users\\Jkoll\\OneDrive - Farmingdale\\Documents\\NetBeansProjects\\Uno_Project\\src\\main\\resources\\com\\mycompany\\uno_project\\startFile.txt";
         readFile(filePath);
@@ -63,8 +67,6 @@ public class fileReader {
                     numberOfAiPlayers = Integer.parseInt(remaining.strip());
     
                 } else if (line.startsWith("#") || line.trim().isEmpty()) {
-                    System.out.println("Comment line: " + line);
-
                 } else if (line.startsWith("All Special Cards:")) {
                     String remaining = line.substring("All Special Cards:".length());
                     allSpecialCards = Boolean.parseBoolean(remaining.strip());
@@ -127,7 +129,7 @@ public class fileReader {
         return special;
     }
 
-    public int getNumberOfStartCards() {
+    public static int getNumberOfStartCards() {
         return numberOfStartCards;
     }
 

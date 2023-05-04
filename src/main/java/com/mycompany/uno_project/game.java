@@ -4,13 +4,7 @@ import java.util.*;
 public class game{
     static fileReader file = new fileReader();
     // Determines the order of the game based on an integer value.
-    public static int order(int order) {
-        if (order % 2 == 0) {
-            return 2;
-        } else {
-            return 1;
-        }
-    }
+  
 
     // Generates a random card, either a numCard or a specialCard.
     public static card generateRandomCard() {
@@ -29,27 +23,15 @@ public class game{
     }
 
     // Generates a random wild color for the Ai.
-    public static String wild() {
-        Random rand = new Random();
-        int randomNum = rand.nextInt(4);
-        if (randomNum == 1) {
-            return "RED";
-        } else if (randomNum == 2) {
-            return "BLUE";
-        } else if (randomNum == 3) {
-            return "GREEN";
-        } else {
-            return "YELLOW";
-        }
-    }
+   
 
     // Generates a hand of cards.
     public static ArrayList<card> generateHand() {
         ArrayList<card> hand = new ArrayList<>();
         Random rand = new Random();
-        int start = file.getNumberOfStartCards();
+        int start = fileReader.getNumberOfStartCards();
         double specialCardProbability = 0.3;
-    
+        System.out.println("start: " + start);
         for (int i = 0; i < start; i++) {
             double randomValue = rand.nextDouble();
             if (randomValue < specialCardProbability) {
@@ -119,5 +101,63 @@ public class game{
         return drawTwo;
 
     }
+
+
+    public static boolean isDrawTwo(String var) {
+        if (var.toLowerCase().equals("draw two")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isDrawFour(String var) {
+        if (var.toLowerCase().equals("wild draw four")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isSkip(String var) {
+        if (var.toLowerCase().equals("skip")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isReverse(String var) {
+        if (var.toLowerCase().equals("reverse")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isWild(String var) {
+        if (var.toLowerCase().equals("wild")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isWildDrawFour(String var) {
+        if (var.toLowerCase().equals("wild draw four")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static String getRandomColor() {
+        Random rand = new Random();
+        String[] COLORS = file.getColors();
+        return COLORS[rand.nextInt(COLORS.length)];
+    }
+
+
+
 }
 

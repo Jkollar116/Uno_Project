@@ -16,4 +16,9 @@ public class numCard extends card {
         Random rand = new Random();
         return new numCard(NUMBERS[rand.nextInt(NUMBERS.length)], COLORS[rand.nextInt(COLORS.length)]);
     }
+
+    @Override
+    public String toString() {
+        return getColor() + " " + getValue();
+    }
 }

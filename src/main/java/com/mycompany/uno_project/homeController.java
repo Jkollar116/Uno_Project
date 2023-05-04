@@ -24,11 +24,11 @@ public class homeController {
         App.setRoot("ai");
     }
 
-    @FXML
-    private void PVP2btn_Click(ActionEvent event) throws IOException {
-        App.setRoot("ai");
-
-    }
+//    @FXML
+//    private void PVP2btn_Click(ActionEvent event) throws IOException {
+//        App.setRoot("ai");
+//
+//    }
 
 
 }
