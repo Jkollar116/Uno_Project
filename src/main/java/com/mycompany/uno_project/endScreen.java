@@ -35,13 +35,16 @@ public class endScreen extends aiController {
             Scanner scanner = new Scanner(file);
             String cardScores = scanner.nextLine();
             scanner.close();
-
+    
             statsTxt.setText(cardScores);
-
+    
+            // Center align the text
+            statsTxt.setStyle("-fx-alignment: center;");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }    
+    }
+       
 
     @FXML
     private void switchToSecondary(ActionEvent event)throws IOException {

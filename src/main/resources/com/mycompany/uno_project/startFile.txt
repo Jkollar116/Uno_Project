@@ -1,6 +1,6 @@
 Number Cards: Zero, One, Two, Three, Four, Five, Six, Seven, Eight, Nine
-Special Cards: SKIP, REVERSE, DRAW TWO, WILD DRAW FOUR
-Colors: Red, Green, Blue, PURPLE
+Special Cards: SKIP, DRAW TWO, WILD DRAW FOUR, REVERSE
+Colors: Red, Green, Blue, Yellow
 Number of Start Cards: 7
 Number of ai players: 2
 

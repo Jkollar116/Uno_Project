@@ -10,6 +10,16 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+import javafx.animation.PauseTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.util.Duration;
+
+// ...
 
 public class aiController extends game implements Initializable {
 
@@ -46,8 +56,6 @@ public class aiController extends game implements Initializable {
     private Button rightArrowbtn;
     @FXML
     private Button leftArrowbtn;
-    @FXML
-    private Label ai1txt;
     @FXML
     private Label ai2txt;
     @FXML
@@ -200,6 +208,7 @@ public class aiController extends game implements Initializable {
         player = game.generateHand();
         card startCard = starterCard;
         currentCard = startCard;
+        ai2txt.setText("Number of Ai Players: " + game.getPlayers());
         assignCardToButton(startCard, mainCardbtn);
         updatePlayerHand();
         drawbtn.setStyle("-fx-base: black;");
@@ -211,8 +220,7 @@ public class aiController extends game implements Initializable {
         
             System.out.println("Number of AI players: " + aiPlayers.size());
             System.out.println("Number of start ccards: " + fileReader.getNumberOfStartCards());
-            ai1txt.setText("AI1 " + aiPlayers.get(0).size() + " cards left");  
-            ai2txt.setText("AI2 " + aiPlayers.get(1).size() + " cards left");  
+           
         
         }
         
@@ -236,7 +244,7 @@ public class aiController extends game implements Initializable {
             buttons[i].setText("");
             buttons[i].setStyle("");
         }
-        playerMessagetxt.setText(player.size() + " cards left");
+        playerMessagetxt.setText("Cards: " + player.size());
     }
 
 /**
@@ -358,260 +366,120 @@ public class aiController extends game implements Initializable {
 
 
 
+public void playOrder(boolean orderVar) {
+    int[] temp = {0}; // Use an array to make it effectively final
+    int currentPlayerIndex = orderVar ? 0 : game.getPlayers() - 1;
 
-
-
- /**
-  * This function represents the actions of an AI player in a card game.
-  */
-   public void aiPlayer(){
-    int temp = 0;
-    // if(numOrder >= 1){
-     for(int i = 0; i <  game.getPlayers(); i++){
-        temp = 0;
-        System.out.println("current card before ai "+ i + " played " + currentCard.getValue() + " " + currentCard.getColor()  + " and " + aiPlayers.get(i).size() + " cards left");
-        ai1txt.setText("AI1 " + aiPlayers.get(0).size() + " cards left");
-       
-        ai2txt.setText("AI2 " + aiPlayers.get(1).size() + " cards left");
-
-        if (game.isDrawTwo(currentCard.getValue())) {
-            System.out.println("card is draw two");
-            aiPlayers.get(i).addAll(game.drawTwo());
-            currentCard.setValue("D");
-            temp = 1;
-       }  
-         else if (game.isSkip(currentCard.getValue())) {
-            System.out.println("card is skip");
-              currentCard.setValue("S");
-              temp = 1;
-         }
-         else if (game.isReverse(currentCard.getValue())) {
-            System.out.println("card is reverse");
-              currentCard.setValue("R");
-              if(order==true){
-                order = false;
-            } else{
-                order = true;
-            }
-              temp = 1;
-         }
-         else if (game.isWildDrawFour(currentCard.getValue())) {
-            System.out.println("card is wild draw four");
-              aiPlayers.get(i).addAll(game.drawFour());
-              currentCard.setValue("D");
-              currentCard.setColor(game.getRandomColor());
-              temp = 1;
-         }
-         else if (game.isWild(currentCard.getValue())) {
-            System.out.println("card is wild");
-              currentCard.setValue("D");
-              currentCard.setColor(game.getRandomColor());
-              temp = 1;
-         }
-         else if (temp == 0) {
-            for (int j = 0; j < aiPlayers.get(i).size(); j++) {
-              if (game.isPlayable(aiPlayers.get(i).get(j), currentCard)) {
-                   currentCard = aiPlayers.get(i).get(j);
-                   assignCardToButton(aiPlayers.get(i).get(j), mainCardbtn);
-                      aiPlayers.get(i).remove(j);
-                      temp = 1;
-                      if (game.isWild(currentCard.getValue()) || game.isWildDrawFour(currentCard.getValue())) {
-                          currentCard.setColor(game.getRandomColor());
-                          assignCardToButton(currentCard, mainCardbtn);
-                          temp = 1;
-                      }
-                      break;
-                   
-              }
-            }
-
-     
-        if (temp == 0) {
-            aiPlayers.get(i).add(game.generateRandomCard());
-        }
-        if(aiPlayers.get(i).size() == 0){
-            try {
-                gameOverScreen();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        System.out.println("current card after ai "+ i + " played " + currentCard.getValue() + " " + currentCard.getColor() + " and " + aiPlayers.get(i).size() + " cards left");
-        
-   }
-
-//     try {
-//      Thread.sleep(2000);
-//  } catch (InterruptedException e) {
-//     e.printStackTrace();
-//  }
-
-
-} //end of the loop for the ai players
-updatePlayerHand();
-assignCardToButton(currentCard, mainCardbtn);
-//assignCardToButton(currentCard, mainCardbtn);
-   if(game.isSkip(currentCard.getValue())){
-    currentCard.setValue("S");
-    playOrder(order);
-   }
-    if(game.isReverse(currentCard.getValue())){
-        currentCard.setValue("R");
-         playOrder(order);
-    }
-    if(game.isDrawTwo(currentCard.getValue())){
-        currentCard.setValue("D");
-        player.addAll(game.drawTwo());
-        updatePlayerHand();
-        playOrder(order);
-    }
-
-    if(game.isWildDrawFour(currentCard.getValue())){
-        System.out.println(currentCard.getValue());
-        currentCard.setValue("D");
-        currentCard.setColor(game.getRandomColor());
-        player.addAll(game.drawFour());
-        updatePlayerHand();
-        playOrder(order);
-    }
-    updatePlayerHand();
-    assignCardToButton(currentCard, mainCardbtn);
+    Timeline initialDelay = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        playOrderWithDelay(orderVar, currentPlayerIndex, temp);
+    }));
+    initialDelay.play();
 }
 
+private void playOrderWithDelay(boolean orderVar, int currentPlayerIndex, int[] temp) {
+    if (orderVar ? currentPlayerIndex < game.getPlayers() : currentPlayerIndex >= 0) {
+        temp[0] = 0;
 
-public void aiPlayerReverse(){
-    int temp = 0;
-    for(int i = 0;game.getPlayers() < i; i--){
-        temp = 0;
-        System.out.println("current card before ai "+ i + " played " + currentCard.getValue() + " " + currentCard.getColor()  + " and " + aiPlayers.get(i).size() + " cards left");
-        ai1txt.setText("AI1 " + aiPlayers.get(0).size() + " cards left");
+        System.out.println("current card before ai " + currentPlayerIndex + " played " + currentCard.getValue() + " " + currentCard.getColor() + " and " + aiPlayers.get(currentPlayerIndex).size() + " cards left");
        
-        ai2txt.setText("AI2 " + aiPlayers.get(1).size() + " cards left");
 
         if (game.isDrawTwo(currentCard.getValue())) {
             System.out.println("card is draw two");
-            aiPlayers.get(i).addAll(game.drawTwo());
+            aiPlayers.get(currentPlayerIndex).addAll(game.drawTwo());
             currentCard.setValue("D");
-            temp = 1;
-       }
-         else if (game.isSkip(currentCard.getValue())) {
+            temp[0] = 1;
+        } else if (game.isSkip(currentCard.getValue())) {
             System.out.println("card is skip");
-              currentCard.setValue("S");
-              temp = 1;
-         }
-         else if (game.isReverse(currentCard.getValue())) {
+            currentCard.setValue("S");
+            temp[0] = 1;
+        } else if (game.isReverse(currentCard.getValue())) {
             System.out.println("card is reverse");
-              currentCard.setValue("R");
-              if(order==true){
-                order = false;
-            } else{
-                order = true;
-            }
-              temp = 1;
-         }
-         else if (game.isWildDrawFour(currentCard.getValue())) {
+            currentCard.setValue("R");
+            order = !order;
+            temp[0] = 1;
+        } else if (game.isWildDrawFour(currentCard.getValue())) {
             System.out.println("card is wild draw four");
-              aiPlayers.get(i).addAll(game.drawFour());
-              currentCard.setValue("D");
-              currentCard.setColor(game.getRandomColor());
-              temp = 1;
-         }
-         else if (game.isWild(currentCard.getValue())) {
+            aiPlayers.get(currentPlayerIndex).addAll(game.drawFour());
+            currentCard.setValue("D");
+            currentCard.setColor(game.getRandomColor());
+            temp[0] = 1;
+        } else if (game.isWild(currentCard.getValue())) {
             System.out.println("card is wild");
-              currentCard.setValue("D");
-              currentCard.setColor(game.getRandomColor());
-              temp = 1;
-         }
-         else if (temp == 0) {
-            for (int j = 0; j < aiPlayers.get(i).size(); j++) {
-              if (game.isPlayable(aiPlayers.get(i).get(j), currentCard)) {
-                   currentCard = aiPlayers.get(i).get(j);
-                   assignCardToButton(aiPlayers.get(i).get(j), mainCardbtn);
-                      aiPlayers.get(i).remove(j);
-                      temp = 1;
-                      if (game.isWild(currentCard.getValue()) || game.isWildDrawFour(currentCard.getValue())) {
+            currentCard.setValue("D");
+            currentCard.setColor(game.getRandomColor());
+            temp[0] = 1;
+        } else if (temp[0] == 0) {
+            for (int j = 0; j < aiPlayers.get(currentPlayerIndex).size(); j++) {
+                if (game.isPlayable(aiPlayers.get(currentPlayerIndex).get(j), currentCard)) {
+                    currentCard = aiPlayers.get(currentPlayerIndex).get(j);
+                    assignCardToButton(aiPlayers.get(currentPlayerIndex).get(j), mainCardbtn);
+                    aiPlayers.get(currentPlayerIndex).remove(j);
+                    temp[0] = 1;
+                    if (game.isWild(currentCard.getValue()) || game.isWildDrawFour(currentCard.getValue())) {
                         currentCard.setColor(game.getRandomColor());
-                          assignCardToButton(currentCard, mainCardbtn);
-                          temp = 1;
-                      }
-                      break;
-                   
-              }
+                        assignCardToButton(currentCard, mainCardbtn);
+                        temp[0] = 1;
+                    }
+                    break;
+                }
             }
-
-     
-        if (temp == 0) {
-            aiPlayers.get(i).add(game.generateRandomCard());
         }
-        if(aiPlayers.get(i).size() == 0){
+
+        if (temp[0] == 0) {
+            aiPlayers.get(currentPlayerIndex).add(game.generateRandomCard());
+        }
+        if (aiPlayers.get(currentPlayerIndex).size() == 0) {
             try {
                 gameOverScreen();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
-        System.out.println("current card after ai "+ i + " played " + currentCard.getValue() + " " + currentCard.getColor() + " and " + aiPlayers.get(i).size() + " cards left");
-        
-   }
 
-//     try {
-//      Thread.sleep(2000);
-//  } catch (InterruptedException e) {
-//     e.printStackTrace();
-//  }
+        System.out.println("current card after ai " + currentPlayerIndex + " played " + currentCard.getValue() + " " + currentCard.getColor() + " and " + aiPlayers.get(currentPlayerIndex).size() + " cards left");
 
+        int nextPlayerIndex = orderVar ? currentPlayerIndex + 1 : currentPlayerIndex - 1;
+        int delayInSeconds = 1; // Adjust the delay as needed
 
-} //end of the loop for the ai players
-updatePlayerHand();
-assignCardToButton(currentCard, mainCardbtn);
-
-   if(game.isSkip(currentCard.getValue())){
-    currentCard.setValue("S");
-    playOrder(order);
-   }
-    if(game.isReverse(currentCard.getValue())){
-        currentCard.setValue("R");
-         playOrder(order);
-    }
-    if(game.isDrawTwo(currentCard.getValue())){
-        currentCard.setValue("D");
-        player.addAll(game.drawTwo());
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delayInSeconds), event -> {
+            Platform.runLater(() -> playOrderWithDelay(orderVar, nextPlayerIndex, temp));
+        }));
+        timeline.play();
+    } else {
         updatePlayerHand();
-        playOrder(order);
-    }
+        assignCardToButton(currentCard, mainCardbtn);
 
-    if(game.isWildDrawFour(currentCard.getValue())){
-        System.out.println(currentCard.getValue());
-        currentCard.setValue("D");
-        currentCard.setColor(game.getRandomColor());
-        player.addAll(game.drawFour());
+        if (game.isSkip(currentCard.getValue())) {
+            currentCard.setValue("S");
+            playOrder(order);
+        }
+        if (game.isReverse(currentCard.getValue())) {
+            currentCard.setValue("R");
+            order = !order;
+            playOrder(order);
+        }
+        if (game.isDrawTwo(currentCard.getValue())) {
+            currentCard.setValue("D");
+            player.addAll(game.drawTwo());
+            updatePlayerHand();
+            playOrder(order);
+        }
+        if (game.isWildDrawFour(currentCard.getValue())) {
+            System.out.println(currentCard.getValue());
+            currentCard.setValue("D");
+            currentCard.setColor(game.getRandomColor());
+            player.addAll(game.drawFour());
+            updatePlayerHand();
+            playOrder(order);
+        }
         updatePlayerHand();
-        playOrder(order);
+        assignCardToButton(currentCard, mainCardbtn);
     }
-    updatePlayerHand();
-    assignCardToButton(currentCard, mainCardbtn);
 }
 
 
- /**
-  * The function determines the order of play and calls either the aiPlayer or aiPlayerReverse function
-  * based on the order.
-  */
-    public void playOrder(boolean orderVar) {
-       
-        
-        if (order==true) {
-            aiPlayer();
-        } else {
-            aiPlayerReverse();
-        }
-    }
 
-   
 
-    
 
     
 /**
@@ -644,6 +512,7 @@ for(int i = 0; i < aiPlayers.size(); i++){
         if(aiPlayers.get(i).get(j).getValue().equalsIgnoreCase("WILD") || aiPlayers.get(i).get(j).getValue().equalsIgnoreCase("WILD DRAW FOUR")){
             scores[i] += 50;
         }
+
     System.out.println("ai player "+ i + " score: " +   scores[i]);
 }
 }
