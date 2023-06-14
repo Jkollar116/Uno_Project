@@ -39,6 +39,15 @@ The `com.mycompany.uno_project.fileReader` class is responsible for reading a fi
 - `getNumberOfAiPlayers()`: Returns the number of AI players read from the file.
 - `isAllSpecialCards()`: Returns a boolean indicating if all special cards are enabled as read from the file.
 
+## Start File
+
+A start file allows you to customize various game settings such as the number of players, number of start cards, available colors, special cards, and number cards.
+
+To use the start file feature:
+
+- Open the `startFile.txt` in the root directory of the project.
+- Modify the settings in the `startFile.txt` according to your preferences.
+
 ## Contributing
 
 Contributions to this project are welcome. If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request.
