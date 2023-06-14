@@ -42,7 +42,3 @@ The `com.mycompany.uno_project.fileReader` class is responsible for reading a fi
 ## Contributing
 
 Contributions to this project are welcome. If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
