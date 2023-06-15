@@ -52,5 +52,8 @@ To use the start file feature:
 
 Contributions to this project are welcome. If you find any bugs or have suggestions for improvements, please open an issue or submit a pull request.
 
-https://github.com/Jkollar116/Uno_Project/assets/77344875/ee778840-118b-48f7-a73b-e3948fbbb5bd
+
+https://github.com/Jkollar116/Uno_Project/assets/77344875/ad70147e-57b6-4547-b070-458b2906109b
+
+
 
