@@ -57,7 +57,7 @@ public class aiController extends game implements Initializable {
     @FXML
     private Button leftArrowbtn;
     @FXML
-    private Label ai2txt;
+    private Label movetxt;
     @FXML
     private Button wildColor1btn;
     @FXML
@@ -66,6 +66,9 @@ public class aiController extends game implements Initializable {
     private Button wildColor3btn;
     @FXML
     private Button wildColor4btn;
+    @FXML
+    private Label turntxt;
+
 
     // Button action methods
     @FXML
@@ -185,6 +188,7 @@ public class aiController extends game implements Initializable {
     @FXML
     private void drawbtn_Click(ActionEvent event) throws IOException {
         player.add(game.generateRandomCard());
+        System.out.println("player drawed a card");
         updatePlayerHand();
         playOrder(order);
     }
@@ -208,10 +212,10 @@ public class aiController extends game implements Initializable {
         player = game.generateHand();
         card startCard = starterCard;
         currentCard = startCard;
-        ai2txt.setText("Number of Ai Players: " + game.getPlayers());
         assignCardToButton(startCard, mainCardbtn);
         updatePlayerHand();
         drawbtn.setStyle("-fx-base: black;");
+        turntxt.setText("Player's turn");
         showWildCardColors(false);
         for(int i = 0; i < game.getPlayers(); i++){
             aiPlayers.add(game.generateHand());
@@ -264,7 +268,10 @@ public class aiController extends game implements Initializable {
             value = "SKIP";
         }else if(value.equalsIgnoreCase("W")){
             value = "WILD";
+        }else if (value.equalsIgnoreCase("WD")){
+            value = "WILD DRAW FOUR";
         }
+
         value = value.replace(" ", "\n");
         button.setText(value);
         button.setStyle("-fx-base: " + card.getColor().toLowerCase() + ";");
@@ -363,11 +370,19 @@ public class aiController extends game implements Initializable {
 
     }
 
+private boolean skipTurn = false;
+private boolean drawTwoTurn = false;
+private boolean drawFourTurn = false;
 
-
-
+/**
+ * This function sets the initial delay for playing the game in a specific order.
+ * 
+ * @param orderVar A boolean variable that determines the order of play. If it is true, players will
+ * play in ascending order, starting from the first player. If it is false, players will play in
+ * descending order, starting from the last player.
+ */
 public void playOrder(boolean orderVar) {
-    int[] temp = {0}; // Use an array to make it effectively final
+    int[] temp = {0}; 
     int currentPlayerIndex = orderVar ? 0 : game.getPlayers() - 1;
 
     Timeline initialDelay = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -375,55 +390,69 @@ public void playOrder(boolean orderVar) {
     }));
     initialDelay.play();
 }
+/**
+ * This function plays the game of Uno with AI players and delays the turns by one second.
+ * 
+ * @param orderVar A boolean variable that determines the order of play. If true, play proceeds in
+ * ascending order of players, otherwise it proceeds in descending order.
+ * @param currentPlayerIndex The index of the current AI player taking their turn.
+ * @param temp An integer array used to store a temporary value during the method execution.
+ */
 
 private void playOrderWithDelay(boolean orderVar, int currentPlayerIndex, int[] temp) {
     if (orderVar ? currentPlayerIndex < game.getPlayers() : currentPlayerIndex >= 0) {
         temp[0] = 0;
 
         System.out.println("current card before ai " + currentPlayerIndex + " played " + currentCard.getValue() + " " + currentCard.getColor() + " and " + aiPlayers.get(currentPlayerIndex).size() + " cards left");
-       
+
+        skipTurn = false;
+        drawTwoTurn = false;
+        drawFourTurn = false;
 
         if (game.isDrawTwo(currentCard.getValue())) {
             System.out.println("card is draw two");
             aiPlayers.get(currentPlayerIndex).addAll(game.drawTwo());
             currentCard.setValue("D");
             temp[0] = 1;
+            drawTwoTurn = true;
         } else if (game.isSkip(currentCard.getValue())) {
             System.out.println("card is skip");
             currentCard.setValue("S");
             temp[0] = 1;
+            skipTurn = true;
         } else if (game.isReverse(currentCard.getValue())) {
             System.out.println("card is reverse");
             currentCard.setValue("R");
-            order = !order;
+            if (game.getPlayers() > 2) {
+                order = !order;
+                currentPlayerIndex = order ? currentPlayerIndex + 1 : currentPlayerIndex - 1;
+            }
             temp[0] = 1;
         } else if (game.isWildDrawFour(currentCard.getValue())) {
             System.out.println("card is wild draw four");
             aiPlayers.get(currentPlayerIndex).addAll(game.drawFour());
-            currentCard.setValue("D");
-            currentCard.setColor(game.getRandomColor());
+            currentCard.setValue("WD");
             temp[0] = 1;
+            drawFourTurn = true;
         } else if (game.isWild(currentCard.getValue())) {
             System.out.println("card is wild");
-            currentCard.setValue("D");
-            currentCard.setColor(game.getRandomColor());
             temp[0] = 1;
         } else if (temp[0] == 0) {
-            for (int j = 0; j < aiPlayers.get(currentPlayerIndex).size(); j++) {
-                if (game.isPlayable(aiPlayers.get(currentPlayerIndex).get(j), currentCard)) {
-                    currentCard = aiPlayers.get(currentPlayerIndex).get(j);
-                    assignCardToButton(aiPlayers.get(currentPlayerIndex).get(j), mainCardbtn);
-                    aiPlayers.get(currentPlayerIndex).remove(j);
-                    temp[0] = 1;
-                    if (game.isWild(currentCard.getValue()) || game.isWildDrawFour(currentCard.getValue())) {
-                        currentCard.setColor(game.getRandomColor());
-                        assignCardToButton(currentCard, mainCardbtn);
-                        temp[0] = 1;
-                    }
-                    break;
-                }
+    for (int j = 0; j < aiPlayers.get(currentPlayerIndex).size(); j++) {
+        if (game.isPlayable(aiPlayers.get(currentPlayerIndex).get(j), currentCard) || game.isWild(currentCard.getValue())) {
+            currentCard = aiPlayers.get(currentPlayerIndex).get(j);
+            assignCardToButton(aiPlayers.get(currentPlayerIndex).get(j), mainCardbtn);
+            aiPlayers.get(currentPlayerIndex).remove(j);
+            temp[0] = 1;
+            if (game.isWild(currentCard.getValue()) || game.isWildDrawFour(currentCard.getValue())) {
+                currentCard.setColor(game.getRandomColor());
+                assignCardToButton(currentCard, mainCardbtn);
+                temp[0] = 1;
             }
+            break;
         }
+    }
+}
 
         if (temp[0] == 0) {
             aiPlayers.get(currentPlayerIndex).add(game.generateRandomCard());
@@ -439,12 +468,21 @@ private void playOrderWithDelay(boolean orderVar, int currentPlayerIndex, int[] 
         System.out.println("current card after ai " + currentPlayerIndex + " played " + currentCard.getValue() + " " + currentCard.getColor() + " and " + aiPlayers.get(currentPlayerIndex).size() + " cards left");
 
         int nextPlayerIndex = orderVar ? currentPlayerIndex + 1 : currentPlayerIndex - 1;
-        int delayInSeconds = 1; // Adjust the delay as needed
+        int delayInSeconds = 1; 
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(delayInSeconds), event -> {
             Platform.runLater(() -> playOrderWithDelay(orderVar, nextPlayerIndex, temp));
         }));
         timeline.play();
+
+       
+        if (!skipTurn && !drawTwoTurn && !drawFourTurn) {
+            int aiPlayerNumber = currentPlayerIndex + 1;
+            turntxt.setText("AI " + aiPlayerNumber + "'s turn");
+        } else {
+            turntxt.setText("Player's turn");
+        }
+
     } else {
         updatePlayerHand();
         assignCardToButton(currentCard, mainCardbtn);
@@ -455,8 +493,10 @@ private void playOrderWithDelay(boolean orderVar, int currentPlayerIndex, int[] 
         }
         if (game.isReverse(currentCard.getValue())) {
             currentCard.setValue("R");
-            order = !order;
-            playOrder(order);
+            if (game.getPlayers() > 2) {
+                order = !order;
+                playOrder(order);
+            }
         }
         if (game.isDrawTwo(currentCard.getValue())) {
             currentCard.setValue("D");
@@ -466,16 +506,21 @@ private void playOrderWithDelay(boolean orderVar, int currentPlayerIndex, int[] 
         }
         if (game.isWildDrawFour(currentCard.getValue())) {
             System.out.println(currentCard.getValue());
-            currentCard.setValue("D");
-            currentCard.setColor(game.getRandomColor());
+            currentCard.setValue("WD");
             player.addAll(game.drawFour());
             updatePlayerHand();
             playOrder(order);
         }
         updatePlayerHand();
         assignCardToButton(currentCard, mainCardbtn);
+
+        if (!skipTurn && !drawTwoTurn && !drawFourTurn) {
+            turntxt.setText("Player's turn");
+        }
     }
 }
+
+
 
 
 
