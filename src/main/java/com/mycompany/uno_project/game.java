@@ -59,9 +59,12 @@ public class game{
             return true;
         } else if (card.getValue().toLowerCase().equals("reverse") && topCard.getValue().toLowerCase().equals("r")) {
             return true;
+        } else if (card.getValue().toLowerCase().equals("wild draw four") && topCard.getValue().toLowerCase().equals("wd")) {
+            return true;
         } else {
             return false;
         }
+        
     }
 
     /**
@@ -96,6 +99,8 @@ public class game{
      */
     public static ArrayList<card> drawFour() {
         ArrayList<card> drawTwo = new ArrayList<>();
+        drawTwo.add(generateRandomCard());
+        drawTwo.add(generateRandomCard());
         drawTwo.add(generateRandomCard());
         drawTwo.add(generateRandomCard());
         return drawTwo;
